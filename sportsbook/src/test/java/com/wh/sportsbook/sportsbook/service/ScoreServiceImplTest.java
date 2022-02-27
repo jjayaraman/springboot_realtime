@@ -1,7 +1,7 @@
 package com.wh.sportsbook.sportsbook.service;
 
 import com.wh.sportsbook.sportsbook.data.ScoreRepository;
-import com.wh.sportsbook.sportsbook.model.Score;
+import com.wh.sportsbook.sportsbook.entity.Score;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

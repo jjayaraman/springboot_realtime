@@ -1,6 +1,6 @@
 package com.wh.sportsbook.sportsbook.data;
 
-import com.wh.sportsbook.sportsbook.model.Score;
+import com.wh.sportsbook.sportsbook.entity.Score;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

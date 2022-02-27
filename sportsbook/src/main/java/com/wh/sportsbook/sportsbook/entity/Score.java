@@ -1,4 +1,4 @@
-package com.wh.sportsbook.sportsbook.model;
+package com.wh.sportsbook.sportsbook.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

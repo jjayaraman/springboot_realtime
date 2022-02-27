@@ -1,6 +1,6 @@
 package com.wh.sportsbook.sportsbook.data;
 
-import com.wh.sportsbook.sportsbook.model.Score;
+import com.wh.sportsbook.sportsbook.entity.Score;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -28,14 +28,14 @@ class ScoreRepositoryTest {
     }
 
     @Test
-    public void findAllScores() {
+    void findAllScores() {
         List<Score> scores = repository.findAll();
         Assertions.assertNotNull(scores);
         Assertions.assertEquals(2, scores.size());
     }
 
     @Test
-    public void deleteScore() {
+    void deleteScore() {
         List<Score> scores = repository.findAll();
         Assertions.assertNotNull(scores);
         Assertions.assertEquals(2, scores.size());
@@ -55,7 +55,7 @@ class ScoreRepositoryTest {
 
     @Disabled
     @Test
-    public void addScore() {
+    void addScore() {
         Score score = new Score(3, "Team C", 0);
         Score created = repository.saveAndFlush(score);
 //        entityManager.clear();

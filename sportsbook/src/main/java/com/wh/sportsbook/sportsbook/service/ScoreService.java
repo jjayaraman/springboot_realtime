@@ -1,6 +1,6 @@
 package com.wh.sportsbook.sportsbook.service;
 
-import com.wh.sportsbook.sportsbook.model.Score;
+import com.wh.sportsbook.sportsbook.entity.Score;
 
 import java.util.List;
 

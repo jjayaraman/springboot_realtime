@@ -1,6 +1,6 @@
 package com.wh.sportsbook.sportsbook.controller;
 
-import com.wh.sportsbook.sportsbook.model.Score;
+import com.wh.sportsbook.sportsbook.entity.Score;
 import com.wh.sportsbook.sportsbook.service.ScoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
