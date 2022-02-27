@@ -57,13 +57,15 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public void deleteScore(Integer id) {
+    public boolean deleteScore(Integer id) {
         Optional<Score> scoreOptional = scoreRepository.findById(id);
         if (scoreOptional.isPresent()) {
             scoreRepository.delete(scoreOptional.get());
             log.info("Record deleted for the given id : " + id);
+            return true;
         } else {
             log.error("No data exists for the given id : " + id);
         }
+        return false;
     }
 }

@@ -14,6 +14,6 @@ public interface ScoreService {
 
     Score getScoreById(Integer id);
 
-    void deleteScore(Integer id);
+    boolean deleteScore(Integer id);
 
 }

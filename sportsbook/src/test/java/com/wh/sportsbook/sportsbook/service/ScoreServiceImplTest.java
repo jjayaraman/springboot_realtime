@@ -73,5 +73,13 @@ class ScoreServiceImplTest {
 
     @Test
     void deleteScore() {
+        Integer id = 1;
+        Mockito.when(scoreRepository.findById(id)).thenReturn(Optional.empty());
+        Assertions.assertFalse(scoreService.deleteScore(id));
+
+        id = 10;
+        Score score = new Score(1, "Team Z", 2);
+        Mockito.when(scoreRepository.findById(id)).thenReturn(Optional.of(score));
+        Assertions.assertTrue(scoreService.deleteScore(id));
     }
 }
