@@ -6,6 +6,7 @@ import com.wh.sportsbook.sportsbook.service.ScoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping(path = "/api")
 @Slf4j
 public class ScoreController {
 
@@ -23,11 +25,12 @@ public class ScoreController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @PostMapping(value = "/score")
+    @PostMapping(value = "/score", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ScoreDto> createScore(@RequestBody ScoreDto scoreDto) {
         log.debug("Creating /score record with input : " + scoreDto);
         Score created = scoreService.createScore(convertToEntity(scoreDto));
-        return ResponseEntity.ok(convertToDto(created));
+        return ResponseEntity.status(HttpStatus.CREATED).body(convertToDto(created));
     }
 
     @GetMapping(value = "/scores", produces = {MediaType.APPLICATION_JSON_VALUE})

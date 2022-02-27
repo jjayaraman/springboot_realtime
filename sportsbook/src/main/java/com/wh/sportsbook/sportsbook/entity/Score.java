@@ -13,8 +13,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Score {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "TEAM")

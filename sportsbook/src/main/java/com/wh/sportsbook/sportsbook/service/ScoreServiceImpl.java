@@ -1,5 +1,6 @@
 package com.wh.sportsbook.sportsbook.service;
 
+import com.wh.sportsbook.sportsbook.controller.exception.EntityNotFoundException;
 import com.wh.sportsbook.sportsbook.data.ScoreRepository;
 import com.wh.sportsbook.sportsbook.entity.Score;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ public class ScoreServiceImpl implements ScoreService {
             log.info("Score updated successfully for id : " + id + ". Updated to : " + updated);
         } else {
             log.error("No data exists for the given id : " + id);
+            throw new EntityNotFoundException("Score not found for the given id : " + id);
         }
         return updated;
     }
@@ -52,6 +54,7 @@ public class ScoreServiceImpl implements ScoreService {
             log.info("getScoreById returning data : " + score);
         } else {
             log.error("No data found for the given id: " + id);
+            throw new EntityNotFoundException("Score not found for the given id : " + id);
         }
         return score;
     }
@@ -65,7 +68,7 @@ public class ScoreServiceImpl implements ScoreService {
             return true;
         } else {
             log.error("No data exists for the given id : " + id);
+            throw new EntityNotFoundException("Score not found for the given id : " + id);
         }
-        return false;
     }
 }
