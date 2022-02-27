@@ -24,18 +24,18 @@ public class ScoreController {
     private ModelMapper modelMapper;
 
     @PostMapping(value = "/score")
-    public ResponseEntity<Score> createScore(@RequestBody ScoreDto scoreDto) {
+    public ResponseEntity<ScoreDto> createScore(@RequestBody ScoreDto scoreDto) {
         log.debug("Creating /score record with input : " + scoreDto);
-        Score score = convertToEntity(scoreDto);
-        Score created = scoreService.createScore(score);
-        return ResponseEntity.ok(created);
+        Score created = scoreService.createScore(convertToEntity(scoreDto));
+        return ResponseEntity.ok(convertToDto(created));
     }
 
     @GetMapping(value = "/scores", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<ScoreDto>> getScores() {
         log.debug("Calling /scores api... ");
-        List<Score> scores = scoreService.getScores();
-        List<ScoreDto> scoreDtos = scores.stream().map(this::convertToDto).collect(Collectors.toList());
+        List<ScoreDto> scoreDtos = scoreService.getScores().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(scoreDtos);
     }
 
@@ -47,10 +47,10 @@ public class ScoreController {
         return ResponseEntity.ok(convertToDto(score));
     }
 
-    @PutMapping(value = "/score/{id}")
-    public ResponseEntity<ScoreDto> updateScore(@PathVariable Integer id, @RequestBody Score score) {
-        log.debug("Updating /score record with input : " + score + " and the id : " + id);
-        Score updated = scoreService.updateScore(id, score);
+    @PutMapping(value = "/scoreDto/{id}")
+    public ResponseEntity<ScoreDto> updateScore(@PathVariable Integer id, @RequestBody ScoreDto scoreDto) {
+        log.debug("Updating /scoreDto record with input : " + scoreDto + " and the id : " + id);
+        Score updated = scoreService.updateScore(id, convertToEntity(scoreDto));
         return ResponseEntity.ok(convertToDto(updated));
     }
 
