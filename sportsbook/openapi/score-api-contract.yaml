@@ -1,0 +1,96 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  /score/{id}:
+    get:
+      tags:
+        - score-controller
+      operationId: getScoreById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Score'
+    put:
+      tags:
+        - score-controller
+      operationId: updateScore
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Score'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Score'
+  /score:
+    post:
+      tags:
+        - score-controller
+      operationId: createScore
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Score'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Score'
+  /scores:
+    get:
+      tags:
+        - score-controller
+      operationId: getScores
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Score'
+components:
+  schemas:
+    Score:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        team:
+          type: string
+        score:
+          type: integer
+          format: int32

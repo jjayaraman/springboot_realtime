@@ -1,0 +1,69 @@
+package com.wh.sportsbook.sportsbook.service;
+
+import com.wh.sportsbook.sportsbook.data.ScoreRepository;
+import com.wh.sportsbook.sportsbook.model.Score;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@Slf4j
+public class ScoreServiceImpl implements ScoreService {
+
+    @Autowired
+    private ScoreRepository scoreRepository;
+
+    @Override
+    public Score createScore(Score score) {
+        Score created = scoreRepository.save(score);
+        log.info("New score created successfully. " + score);
+        return created;
+    }
+
+    @Override
+    public Score updateScore(Integer id, Score score) {
+        Score updated = null;
+        Optional<Score> scoreOptional = scoreRepository.findById(id);
+        if (scoreOptional.isPresent()) {
+            updated = scoreRepository.save(score);
+            log.info("Score updated successfully for id : " + id + ". Updated to : " + updated);
+        } else {
+            log.error("No data exists for the given id : " + id);
+        }
+        return updated;
+    }
+
+    @Override
+    public List<Score> getScores() {
+        List<Score> scores = scoreRepository.findAll();
+        log.info("getScores returning data of size : " + scores.size());
+        return scores;
+    }
+
+    @Override
+    public Score getScoreById(Integer id) {
+        Score score = null;
+        Optional<Score> scoreOptional = scoreRepository.findById(id);
+        if (scoreOptional.isPresent()) {
+            score = scoreOptional.get();
+            log.info("getScoreById returning data : " + score);
+        } else {
+            log.error("No data found for the given id: " + id);
+        }
+        return score;
+    }
+
+    @Override
+    public void deleteScore(Integer id) {
+        Optional<Score> scoreOptional = scoreRepository.findById(id);
+        if (scoreOptional.isPresent()) {
+            scoreRepository.delete(scoreOptional.get());
+            log.info("Record deleted for the given id : " + id);
+        } else {
+            log.error("No data exists for the given id : " + id);
+        }
+    }
+}
