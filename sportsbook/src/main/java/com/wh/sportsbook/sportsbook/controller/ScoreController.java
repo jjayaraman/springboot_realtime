@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +26,8 @@ public class ScoreController {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    SseEmitter sseEmitter = new SseEmitter();
 
     @PostMapping(value = "/score", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,6 +43,20 @@ public class ScoreController {
         List<ScoreDto> scoreDtos = scoreService.getScores().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+        // sseEmitter
+        try {
+            sseEmitter.send(scoreDtos);
+
+            sseEmitter.onCompletion(() -> log.info("SseEmitter is completed"));
+
+            sseEmitter.onTimeout(() -> log.info("SseEmitter is timed out"));
+
+            sseEmitter.onError((ex) -> log.info("SseEmitter got error:", ex));
+
+        } catch (IOException e) {
+            log.error("Error while sending score events :" + e.getMessage());
+            sseEmitter.completeWithError(e);
+        }
         return ResponseEntity.ok(scoreDtos);
     }
 
@@ -54,6 +72,14 @@ public class ScoreController {
     public ResponseEntity<ScoreDto> updateScore(@PathVariable Integer id, @RequestBody ScoreDto scoreDto) {
         log.debug("Updating /scoreDto record with input : " + scoreDto + " and the id : " + id);
         Score updated = scoreService.updateScore(id, convertToEntity(scoreDto));
+
+        // sseEmitter
+        try {
+            sseEmitter.send(updated);
+        } catch (IOException e) {
+            log.error("Error while sending score events :" + e.getMessage());
+            sseEmitter.completeWithError(e);
+        }
         return ResponseEntity.ok(convertToDto(updated));
     }
 
