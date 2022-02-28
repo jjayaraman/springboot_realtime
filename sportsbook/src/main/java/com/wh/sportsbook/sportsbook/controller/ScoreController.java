@@ -45,6 +45,8 @@ public class ScoreController {
                 .collect(Collectors.toList());
         // sseEmitter
         try {
+
+            sseEmitter.send(SseEmitter.event().data("Hello..... "));
             sseEmitter.send(scoreDtos);
 
             sseEmitter.onCompletion(() -> log.info("SseEmitter is completed"));
