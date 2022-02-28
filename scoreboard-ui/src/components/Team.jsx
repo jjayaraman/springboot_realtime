@@ -9,31 +9,48 @@ const Team = props => {
     const [listening, setListening] = useState(false);
 
     let score = props.score;
-    let eventSource = undefined;
+    // let eventSource = undefined;
+    let ws = new WebSocket("ws://localhost:8080/hello");
 
     useEffect(() => {
         if (!listening) {
-            eventSource = new EventSource("http://localhost:8080/api/scores");
 
-            // eventSource = new EventSource("/api/scores");
+            ws.onopen = ((ws, e) => {
+                console.log('onopen : ', e, ws);
+            })
 
-            eventSource.onopen = (event) => {
-                console.log("connection opened")
-            }
+            ws.onmessage = (ev => {
+                console.log('onmessage : ', ev);
+            })
 
-            eventSource.onmessage = (event) => {
-                console.log("result", event.data);
 
-            }
+            ws.onerror = (ev => {
+                console.log('onerror : ', ev);
+            })
+
+            // eventSource = new EventSource("http://localhost:8080/api/scores", { 'withCredentials': true });
+
+            // eventSource.onopen = (event) => {
+            //     console.log("connection opened")
+            // }
+
+            // eventSource.onmessage = (event) => {
+            //     console.log("result", event.data);
+
+            // }
             setListening(true);
         }
 
         return () => {
-            eventSource.close();
-            console.log("eventsource closed")
+            // eventSource.close();
+            // console.log("eventsource closed")
         }
     }, [])
 
+    const send = () => {
+        console.log('clicked...', ws);
+        ws.send("hello ws");
+    }
 
     return (
         <div>
@@ -44,6 +61,7 @@ const Team = props => {
                     <Card.Text >
                         <h1>{score.score}</h1>
                     </Card.Text>
+                    <button onClick={send} >Send</button>
                 </Card.Body>
             </Card>
         </div>
