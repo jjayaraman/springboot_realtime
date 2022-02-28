@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import { Card } from 'react-bootstrap';
@@ -6,20 +6,32 @@ import { Card } from 'react-bootstrap';
 
 const Team = props => {
 
+    const [listening, setListening] = useState(false);
+
     let score = props.score;
-    let eventSource;
+    let eventSource = undefined;
+
     useEffect(() => {
-        eventSource = new EventSource("http://localhost:8080/api/scores");
+        if (!listening) {
+            eventSource = new EventSource("http://localhost:8080/api/scores");
 
-        eventSource.onopen = (event) => {
-            console.log("connection opened")
+            // eventSource = new EventSource("/api/scores");
+
+            eventSource.onopen = (event) => {
+                console.log("connection opened")
+            }
+
+            eventSource.onmessage = (event) => {
+                console.log("result", event.data);
+
+            }
+            setListening(true);
         }
 
-        eventSource.onmessage = (event) => {
-            console.log("result", event.data);
-
+        return () => {
+            eventSource.close();
+            console.log("eventsource closed")
         }
-
     }, [])
 
 
