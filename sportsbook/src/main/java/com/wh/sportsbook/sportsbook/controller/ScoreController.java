@@ -30,6 +30,9 @@ public class ScoreController {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private SimpMessagingTemplate template;
+
     @PostMapping(value = "/score", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ScoreDto> createScore(@RequestBody ScoreDto scoreDto) {
@@ -44,7 +47,6 @@ public class ScoreController {
         List<ScoreDto> scoreDtos = scoreService.getScores().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
-
         return ResponseEntity.ok(scoreDtos);
     }
 
@@ -56,11 +58,15 @@ public class ScoreController {
         return ResponseEntity.ok(convertToDto(score));
     }
 
-    @PutMapping(value = "/scoreDto/{id}")
+    @PutMapping(value = "/score/{id}")
     public ResponseEntity<ScoreDto> updateScore(@PathVariable Integer id, @RequestBody ScoreDto scoreDto) {
-        log.debug("Updating /scoreDto record with input : " + scoreDto + " and the id : " + id);
+        log.debug("Updating /score record with input : " + scoreDto + " and the id : " + id);
         Score updated = scoreService.updateScore(id, convertToEntity(scoreDto));
-        return ResponseEntity.ok(convertToDto(updated));
+        ScoreDto updatedDto = convertToDto(updated);
+        // Broadcast the updated score to the websocket clients
+        template.convertAndSend("/topic/message", updatedDto);
+        log.info("msg posted to ws clients using /topic/message destination : " + updatedDto);
+        return ResponseEntity.ok(updatedDto);
     }
 
 
