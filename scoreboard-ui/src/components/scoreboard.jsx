@@ -27,15 +27,13 @@ export default function ScoreBoard() {
 
     useEffect(() => {
 
-        console.log(API_CONTEXT);
         fetch(API_CONTEXT + '/scores')
             .then(res => res.json())
             .then(data => {
-                console.log('data : ', data);
                 setscores(data)
             })
             .catch(error => {
-                console.log('Error :::', error);
+                console.error('Error :::', error);
             })
 
     }, [])

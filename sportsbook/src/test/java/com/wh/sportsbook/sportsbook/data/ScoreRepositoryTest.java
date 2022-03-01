@@ -53,17 +53,4 @@ class ScoreRepositoryTest {
     }
 
 
-    @Disabled
-    @Test
-    void addScore() {
-        Score score = new Score(3, "Team C", 0);
-        Score created = repository.saveAndFlush(score);
-//        entityManager.clear();
-        Assertions.assertNotNull(created);
-        Assertions.assertEquals(3, created.getId());
-
-        List<Score> scores2 = repository.findAll();
-        Assertions.assertNotNull(scores2);
-        Assertions.assertEquals(1, scores2.size());
-    }
 }

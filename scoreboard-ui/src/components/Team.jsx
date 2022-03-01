@@ -1,47 +1,30 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Card } from 'react-bootstrap';
-import SockJsClient from 'react-stomp';
 
-const SOCKET_URL = 'http://localhost:8080/ws-message';
 
 const Team = props => {
 
     let score = props.score;
-
-    const [listening, setListening] = useState(false);
-
-
-
-    useEffect(() => {
-
-        return () => {
-            // eventSource.close();
-            console.log("useeffect")
-        }
-    }, [])
-
-    const send = () => {
-        console.log('clicked...');
-
-    }
 
     return (
         <div>
 
             <Card style={{ width: '18rem' }} >
                 <Card.Body>
-                    <Card.Title>{score.team}</Card.Title>
+                    <Card.Header>{score.team}</Card.Header>
                     <Card.Text >
                         <h1>{score.score}</h1>
                     </Card.Text>
-                    <button onClick={send} >Send</button>
                 </Card.Body>
             </Card>
         </div>
     )
 }
 
-Team.propTypes = {}
+Team.propTypes = {
+    team: PropTypes.string,
+    score: PropTypes.object
+}
 
 export default Team

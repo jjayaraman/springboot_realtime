@@ -1,7 +1,7 @@
 
 spring:
   datasource:
-    url: jdbc:h2:mem:sportsbookdb
+    url: jdbc:h2:mem:sportsbookdb;MODE=LEGACY
     driverClassName: org.h2.Driver
 
   h2:
