@@ -4,25 +4,26 @@ import com.wh.sportsbook.sportsbook.websocket.ScoreWebSocketHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.config.annotation.*;
 
 @Configuration
-@EnableWebSocket
+@EnableWebSocketMessageBroker
 @Slf4j
-public class WebSocketConfig implements WebSocketConfigurer {
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        log.info(">>>>>>>>  registry ::  " +registry);
-        registry.addHandler(scoreWebSocketHandler(), "/hello")
-                .setAllowedOrigins("*");
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/ws-message").setAllowedOrigins("*").withSockJS();
     }
 
-    @Bean
-    public ScoreWebSocketHandler scoreWebSocketHandler() {
-        return new ScoreWebSocketHandler();
-    }
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
 
+        // Destination prefix - to carry messages to client
+        registry.enableSimpleBroker("/topic");
+
+        // Prefix for the server - to receive message from the client
+        registry.setApplicationDestinationPrefixes("/app");
+    }
 }
