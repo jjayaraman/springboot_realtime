@@ -1,55 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-
 import { Card } from 'react-bootstrap';
+import SockJsClient from 'react-stomp';
 
+const SOCKET_URL = 'http://localhost:8080/ws-message';
 
 const Team = props => {
 
+    let score = props.score;
+
     const [listening, setListening] = useState(false);
 
-    let score = props.score;
-    // let eventSource = undefined;
-    let ws = new WebSocket("ws://localhost:8080/hello");
+
 
     useEffect(() => {
-        if (!listening) {
-
-            ws.onopen = ((ws, e) => {
-                console.log('onopen : ', e, ws);
-            })
-
-            ws.onmessage = (ev => {
-                console.log('onmessage : ', ev);
-            })
-
-
-            ws.onerror = (ev => {
-                console.log('onerror : ', ev);
-            })
-
-            // eventSource = new EventSource("http://localhost:8080/api/scores", { 'withCredentials': true });
-
-            // eventSource.onopen = (event) => {
-            //     console.log("connection opened")
-            // }
-
-            // eventSource.onmessage = (event) => {
-            //     console.log("result", event.data);
-
-            // }
-            setListening(true);
-        }
 
         return () => {
             // eventSource.close();
-            // console.log("eventsource closed")
+            console.log("useeffect")
         }
     }, [])
 
     const send = () => {
-        console.log('clicked...', ws);
-        ws.send("hello ws");
+        console.log('clicked...');
+
     }
 
     return (
