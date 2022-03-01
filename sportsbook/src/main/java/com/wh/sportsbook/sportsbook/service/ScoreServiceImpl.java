@@ -26,16 +26,21 @@ public class ScoreServiceImpl implements ScoreService {
 
     @Override
     public Score updateScore(Integer id, Score score) {
-        Score updated = null;
+        Score updated;
         Optional<Score> scoreOptional = scoreRepository.findById(id);
         if (scoreOptional.isPresent()) {
-            updated = scoreRepository.save(score);
+            updated = scoreRepository.saveAndFlush(scoreOptional.get());
             log.info("Score updated successfully for id : " + id + ". Updated to : " + updated);
-        } else {
+
+            Optional<Score> updatedOptional = scoreRepository.findById(id);
+            if (updatedOptional.isPresent()) {
+                return updatedOptional.get();
+            }
             log.error("No data exists for the given id : " + id);
             throw new EntityNotFoundException("Score not found for the given id : " + id);
         }
-        return updated;
+        log.error("No data exists for the given id : " + id);
+        throw new EntityNotFoundException("Score not found for the given id : " + id);
     }
 
     @Override

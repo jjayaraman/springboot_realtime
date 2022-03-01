@@ -13,6 +13,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
@@ -33,12 +34,15 @@ public class ScoreController {
     @Autowired
     private SimpMessagingTemplate template;
 
-    @PostMapping(value = "/score", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/score")
     public ResponseEntity<ScoreDto> createScore(@RequestBody ScoreDto scoreDto) {
         log.debug("Creating /score record with input : " + scoreDto);
         Score created = scoreService.createScore(convertToEntity(scoreDto));
-        return ResponseEntity.status(HttpStatus.CREATED).body(convertToDto(created));
+        if (created != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(convertToDto(created));
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 
     @GetMapping(value = "/scores", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -55,18 +59,26 @@ public class ScoreController {
     public ResponseEntity<ScoreDto> getScoreById(@PathVariable Integer id) {
         log.debug("Calling getScoreById() GET /score/{id} api... ");
         Score score = scoreService.getScoreById(id);
-        return ResponseEntity.ok(convertToDto(score));
+        if (score != null) {
+            return ResponseEntity.ok(convertToDto(score));
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 
     @PutMapping(value = "/score/{id}")
     public ResponseEntity<ScoreDto> updateScore(@PathVariable Integer id, @RequestBody ScoreDto scoreDto) {
         log.debug("Updating /score record with input : " + scoreDto + " and the id : " + id);
         Score updated = scoreService.updateScore(id, convertToEntity(scoreDto));
-        ScoreDto updatedDto = convertToDto(updated);
-        // Broadcast the updated score to the websocket clients
-        template.convertAndSend("/topic/message", updatedDto);
-        log.info("msg posted to ws clients using /topic/message destination : " + updatedDto);
-        return ResponseEntity.ok(updatedDto);
+        if (updated != null) {
+            ScoreDto updatedDto = convertToDto(updated);
+            // Broadcast the updated score to the websocket clients
+            template.convertAndSend("/topic/message", updatedDto);
+            log.info("msg posted to ws clients using /topic/message destination : " + updatedDto);
+            return ResponseEntity.ok(updatedDto);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 
 

@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class ScoreDto {
 
     private Integer id;
@@ -14,4 +13,9 @@ public class ScoreDto {
     private String team;
 
     private Integer score;
+
+    public ScoreDto(String team, Integer score) {
+        this.team = team;
+        this.score = score;
+    }
 }
