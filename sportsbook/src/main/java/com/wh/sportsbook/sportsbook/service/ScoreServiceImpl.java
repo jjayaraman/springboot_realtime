@@ -29,7 +29,7 @@ public class ScoreServiceImpl implements ScoreService {
         Score updated;
         Optional<Score> scoreOptional = scoreRepository.findById(id);
         if (scoreOptional.isPresent()) {
-            updated = scoreRepository.saveAndFlush(scoreOptional.get());
+            updated = scoreRepository.saveAndFlush(score);
             log.info("Score updated successfully for id : " + id + ". Updated to : " + updated);
 
             Optional<Score> updatedOptional = scoreRepository.findById(id);

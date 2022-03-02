@@ -43,7 +43,7 @@ class ScoreControllerIntegrationTest {
         Assertions.assertNotNull(created.getBody());
 
         Assertions.assertEquals("Team X", created.getBody().getTeam());
-        Assertions.assertEquals(3, created.getBody().getId());
+        Assertions.assertEquals(4, created.getBody().getId());
         Assertions.assertEquals(0, created.getBody().getScore());
 
     }
@@ -59,8 +59,8 @@ class ScoreControllerIntegrationTest {
         Assertions.assertNotNull(response);
         Assertions.assertEquals(200, response.getStatusCodeValue());
         Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(3, response.getBody().size());
-
+        Assertions.assertEquals(4, response.getBody().size());
+        System.out.println(response.getBody());
         Assertions.assertEquals("Team A", response.getBody().get(0).getTeam());
         Assertions.assertEquals(0, response.getBody().get(0).getScore());
 
