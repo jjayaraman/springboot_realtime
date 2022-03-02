@@ -58,11 +58,8 @@ class ScoreServiceImplTest {
 
     @Test
     void getScoreById() {
-        Integer id = 1;
-        Mockito.when(scoreRepository.findById(id)).thenReturn(Optional.empty());
-        Assertions.assertNull(scoreService.getScoreById(id));
+        Integer id = 10;
 
-        id = 10;
         Score score = new Score(1, "Team Z", 2);
         Mockito.when(scoreRepository.findById(id)).thenReturn(Optional.of(score));
         Assertions.assertNotNull(scoreService.getScoreById(id));
@@ -73,11 +70,8 @@ class ScoreServiceImplTest {
 
     @Test
     void deleteScore() {
-        Integer id = 1;
-        Mockito.when(scoreRepository.findById(id)).thenReturn(Optional.empty());
-        Assertions.assertFalse(scoreService.deleteScore(id));
+        Integer id = 10;
 
-        id = 10;
         Score score = new Score(1, "Team Z", 2);
         Mockito.when(scoreRepository.findById(id)).thenReturn(Optional.of(score));
         Assertions.assertTrue(scoreService.deleteScore(id));
