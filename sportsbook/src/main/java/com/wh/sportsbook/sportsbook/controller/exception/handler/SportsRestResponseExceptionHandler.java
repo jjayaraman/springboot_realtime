@@ -16,13 +16,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class SportsRestResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
 
-//    @ResponseBody
-//    @ExceptionHandler(Exception.class)
-//    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
-//    public ApiError otherErrors(Exception ex) {
-//        log.error(ex.getMessage());
-//        return new ApiError(HttpStatus.EXPECTATION_FAILED, "A System exception occurred, please contact Helpdesk");
-//    }
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
+    public ApiError otherErrors(Exception ex) {
+        log.error(ex.getMessage());
+        return new ApiError(HttpStatus.EXPECTATION_FAILED, "A System exception occurred, please contact Helpdesk");
+    }
 
     @ResponseBody
     @ExceptionHandler(EntityNotFoundException.class)
