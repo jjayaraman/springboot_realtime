@@ -42,24 +42,24 @@ class ScoreServiceImplTest {
     void tearDown() {
     }
 
-    @Test
-    void createScore() {
-    }
 
     @Test
     void updateScore() {
+        Integer id = 10;
+        Score score = new Score(1, "Team Z", 2);
+        Mockito.when(scoreRepository.findById(id)).thenReturn(Optional.of(score));
+        Assertions.assertNotNull(scoreService.getScoreById(id));
+
+        Score modified = new Score("Team Z", 5);
+        Score updated = scoreService.updateScore(id, modified);
+        // No exceptions should be thrown
+        Assertions.assertNotNull(updated);
     }
 
-    @Test
-    void getScores() {
-        List<Score> scores = scoreService.getScores();
-        System.out.println(">>>>>>>> " +scores);
-    }
 
     @Test
     void getScoreById() {
         Integer id = 10;
-
         Score score = new Score(1, "Team Z", 2);
         Mockito.when(scoreRepository.findById(id)).thenReturn(Optional.of(score));
         Assertions.assertNotNull(scoreService.getScoreById(id));
@@ -71,7 +71,6 @@ class ScoreServiceImplTest {
     @Test
     void deleteScore() {
         Integer id = 10;
-
         Score score = new Score(1, "Team Z", 2);
         Mockito.when(scoreRepository.findById(id)).thenReturn(Optional.of(score));
         Assertions.assertTrue(scoreService.deleteScore(id));
