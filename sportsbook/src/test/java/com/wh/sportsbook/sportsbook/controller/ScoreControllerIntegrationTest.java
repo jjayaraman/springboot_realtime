@@ -1,26 +1,19 @@
 package com.wh.sportsbook.sportsbook.controller;
 
-import com.google.gson.Gson;
 import com.wh.sportsbook.sportsbook.dto.ScoreDto;
-import com.wh.sportsbook.sportsbook.service.ScoreService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.*;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ScoreControllerIntegrationTest {
@@ -55,39 +48,47 @@ class ScoreControllerIntegrationTest {
 
     }
 
-    //
-//    @Test
-//    void getScores() throws Exception {
-//
-//        MvcResult result = mockMvc
-//                .perform(get("/api/scores")
-//                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-//                .andReturn();
-//
-//        Assertions.assertNotNull(result);
-//        Assertions.assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-//
-//    }
-//
-//    @Test
-//    void getScoreById() throws Exception {
-//        Integer id = 1;
-//        MvcResult result = mockMvc
-//                .perform(get("/api/score/" + id)
-//                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-//                .andReturn();
-//
-//        Assertions.assertNotNull(result);
-//        Assertions.assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-//    }
-//
+
+    @Test
+    void getScores() throws Exception {
+
+        ResponseEntity<List<ScoreDto>> response = restTemplate.exchange(url + "/api/scores", HttpMethod.GET,
+                null, new ParameterizedTypeReference<List<ScoreDto>>() {
+                });
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(200, response.getStatusCodeValue());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(2, response.getBody().size());
+
+        Assertions.assertEquals("Team A", response.getBody().get(0).getTeam());
+        Assertions.assertEquals(0, response.getBody().get(0).getScore());
+
+        Assertions.assertEquals("Team B", response.getBody().get(1).getTeam());
+        Assertions.assertEquals(0, response.getBody().get(1).getScore());
+    }
+
+    @Test
+    void getScoreById() throws Exception {
+        Integer id = 1;
+        ResponseEntity<ScoreDto> response = restTemplate.getForEntity(url + "/api/score/" + id, ScoreDto.class);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(200, response.getStatusCodeValue());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(1, response.getBody().getId());
+        Assertions.assertEquals("Team A", response.getBody().getTeam());
+        Assertions.assertEquals(0, response.getBody().getScore());
+
+    }
+
     @Test
     void updateScore() {
         Integer id = 1;
         ScoreDto scoreDto = new ScoreDto("Team X", 10);
 
         HttpEntity<ScoreDto> body = new HttpEntity<>(scoreDto);
-        ResponseEntity<ScoreDto> updated = restTemplate.exchange(url + "/api/score/" +id, HttpMethod.PUT, body, ScoreDto.class);
+        ResponseEntity<ScoreDto> updated = restTemplate.exchange(url + "/api/score/" + id, HttpMethod.PUT, body, ScoreDto.class);
 
         Assertions.assertNotNull(updated);
         Assertions.assertEquals(200, updated.getStatusCodeValue());
